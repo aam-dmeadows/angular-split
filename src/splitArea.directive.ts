@@ -1,6 +1,6 @@
-import { Directive, Input, ElementRef, Renderer, OnInit, OnDestroy } from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit, Renderer} from '@angular/core';
 
-import { SplitComponent } from './split.component';
+import {SplitComponent} from './split.component';
 
 @Directive({
     selector: 'split-area',
@@ -17,29 +17,33 @@ import { SplitComponent } from './split.component';
 export class SplitAreaDirective implements OnInit, OnDestroy {
 
     private _order: number | null = null;
-    @Input() set order(v: number) {
+    @Input()
+    set order(v: number) {
         this._order = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }
 
     private _size: number | null = null;
-    @Input() set size(v: any) {
+    @Input()
+    set size(v: any) {
         this._size = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }
 
     private _minSizePixel: number = 0;
-    @Input() set minSizePixel(v: number) {
+    @Input()
+    set minSizePixel(v: number) {
         this._minSizePixel = (!isNaN(v) && v > 0) ? v : 0;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }
 
     private _visible: boolean = true;
-    @Input() set visible(v: boolean) {
-        this.visibility = v ? "block" : "none";
+    @Input()
+    set visible(v: boolean) {
+        this.visibility = v ? 'block' : 'none';
         this._visible = v;
 
-        if(this.visible) { 
+        if (this.visible) {
             this.split.showArea(this);
         }
         else {
@@ -51,27 +55,36 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
         return this._visible;
     }
 
-    visibility: string = "block";
+    visibility: string = 'block';
+
+    @Input()
+    @HostBinding('style.overflow-x')
+    protected overflow_x: string = 'hidden';
+
+    @Input()
+    @HostBinding('style.overflow-y')
+    protected overflow_y: string = 'auto';
 
     eventsLockFct: Array<Function> = [];
 
     constructor(private elementRef: ElementRef,
-        private renderer: Renderer,
-        private split: SplitComponent) {}
+                private renderer: Renderer,
+                private split: SplitComponent) {
+    }
 
     public ngOnInit() {
         this.split.addArea(this, this._order, this._size, this._minSizePixel);
     }
 
     public lockEvents() {
-        this.eventsLockFct.push( this.renderer.listen(this.elementRef.nativeElement, 'selectstart', e => false) );
-        this.eventsLockFct.push( this.renderer.listen(this.elementRef.nativeElement, 'dragstart', e => false) );
+        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'selectstart', e => false));
+        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'dragstart', e => false));
     }
 
     public unlockEvents() {
-        while(this.eventsLockFct.length > 0) {
+        while (this.eventsLockFct.length > 0) {
             const fct = this.eventsLockFct.pop();
-            if(fct) {
+            if (fct) {
                 fct();
             }
         }
@@ -87,7 +100,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
 
     public onTransitionEnd(evt: TransitionEvent) {
         // Limit only flex-basis transition to trigger the event
-        if(evt.propertyName === 'flex-basis')
+        if (evt.propertyName === 'flex-basis')
             this.split.notify('visibleTransitionEnd');
     }
 }
