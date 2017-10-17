@@ -322,7 +322,9 @@ var SplitAreaDirective = (function () {
         this._size = null;
         this._minSizePixel = 0;
         this._visible = true;
-        this.visibility = "block";
+        this.visibility = 'block';
+        this.overflow_x = 'hidden';
+        this.overflow_y = 'auto';
         this.eventsLockFct = [];
     }
     Object.defineProperty(SplitAreaDirective.prototype, "order", {
@@ -354,7 +356,7 @@ var SplitAreaDirective = (function () {
             return this._visible;
         },
         set: function (v) {
-            this.visibility = v ? "block" : "none";
+            this.visibility = v ? 'block' : 'none';
             this._visible = v;
             if (this.visible) {
                 this.split.showArea(this);
@@ -419,6 +421,8 @@ SplitAreaDirective.propDecorators = {
     'size': [{ type: _angular_core.Input },],
     'minSizePixel': [{ type: _angular_core.Input },],
     'visible': [{ type: _angular_core.Input },],
+    'overflow_x': [{ type: _angular_core.Input }, { type: _angular_core.HostBinding, args: ['style.overflow-x',] },],
+    'overflow_y': [{ type: _angular_core.Input }, { type: _angular_core.HostBinding, args: ['style.overflow-y',] },],
 };
 
 var SplitGutterDirective = (function () {

@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, Renderer } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, Renderer } from '@angular/core';
 import { SplitComponent } from './split.component';
 var SplitAreaDirective = (function () {
     function SplitAreaDirective(elementRef, renderer, split) {
@@ -9,7 +9,9 @@ var SplitAreaDirective = (function () {
         this._size = null;
         this._minSizePixel = 0;
         this._visible = true;
-        this.visibility = "block";
+        this.visibility = 'block';
+        this.overflow_x = 'hidden';
+        this.overflow_y = 'auto';
         this.eventsLockFct = [];
     }
     Object.defineProperty(SplitAreaDirective.prototype, "order", {
@@ -41,7 +43,7 @@ var SplitAreaDirective = (function () {
             return this._visible;
         },
         set: function (v) {
-            this.visibility = v ? "block" : "none";
+            this.visibility = v ? 'block' : 'none';
             this._visible = v;
             if (this.visible) {
                 this.split.showArea(this);
@@ -107,5 +109,7 @@ SplitAreaDirective.propDecorators = {
     'size': [{ type: Input },],
     'minSizePixel': [{ type: Input },],
     'visible': [{ type: Input },],
+    'overflow_x': [{ type: Input }, { type: HostBinding, args: ['style.overflow-x',] },],
+    'overflow_y': [{ type: Input }, { type: HostBinding, args: ['style.overflow-y',] },],
 };
 //# sourceMappingURL=splitArea.directive.js.map
